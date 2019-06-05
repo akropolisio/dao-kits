@@ -27,7 +27,7 @@ module.exports = async (
     minimeTokenFactoryAddress = defaultMinimeTokenFactoryAddress,
     kitName,
     kitContractName = kitName,
-    network,
+    environment,
     verbose = true,
     returnKit = false
   } = {}

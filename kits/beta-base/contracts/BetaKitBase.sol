@@ -24,6 +24,8 @@ contract BetaKitBase is KitBase, IsContract {
 
     mapping (address => address) tokenCache;
 
+    address public constant ANY_ENTITY = address(-1);
+
     // ensure alphabetic order
     enum Apps { Finance, TokenManager, Vault, Voting }
 
@@ -110,7 +112,7 @@ contract BetaKitBase is KitBase, IsContract {
         token.changeController(tokenManager);
 
         // permissions
-        acl.createPermission(tokenManager, voting, voting.CREATE_VOTES_ROLE(), voting);
+        acl.createPermission(ANY_ENTITY, voting, voting.CREATE_VOTES_ROLE(), voting);
         acl.createPermission(voting, voting, voting.MODIFY_QUORUM_ROLE(), voting);
         acl.createPermission(finance, vault, vault.TRANSFER_ROLE(), voting);
         acl.createPermission(voting, finance, finance.CREATE_PAYMENTS_ROLE(), voting);
