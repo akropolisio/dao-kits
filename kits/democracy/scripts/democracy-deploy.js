@@ -6,14 +6,15 @@ module.exports = async (callback) => {
   const deployConfig = {
     artifacts,
     kitName: 'democracy-akropolis',
-    kitContractName: 'DemocracyAkropolis',
+    kitContractName: 'DemocracyKit',
     returnKit: true,
   }
 
+
+  
   const { address } = await deployKit(null, deployConfig)
 
   console.log(address)
 
-  console.log("blabla")
   callback()
 }
