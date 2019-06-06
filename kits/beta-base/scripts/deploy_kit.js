@@ -66,12 +66,12 @@ module.exports = async (
   if (!ensAddress) {
     errorOut('ENS environment variable not passed, aborting.')
   }
-  //log('Using ENS', ensAddress)
+  log('Using ENS', ensAddress)
   const ens = ENS.at(ensAddress)
 
   let daoFactory
   if (daoFactoryAddress) {
-    //log(`Using provided DAOFactory: ${daoFactoryAddress}`)
+    log(`Using provided DAOFactory: ${daoFactoryAddress}`)
     daoFactory = DAOFactory.at(daoFactoryAddress)
   } else {
     daoFactory = (await deployDAOFactory(null, { artifacts, verbose: false })).daoFactory
@@ -79,11 +79,11 @@ module.exports = async (
 
   let minimeFac
   if (minimeTokenFactoryAddress) {
-    //log(`Using provided MiniMeTokenFactory: ${minimeTokenFactoryAddress}`)
+    log(`Using provided MiniMeTokenFactory: ${minimeTokenFactoryAddress}`)
     minimeFac = MiniMeTokenFactory.at(minimeTokenFactoryAddress)
   } else {
     minimeFac = await MiniMeTokenFactory.new()
-    //log('Deployed MiniMeTokenFactory:', minimeFac.address)
+    log('Deployed MiniMeTokenFactory:', minimeFac.address)
   }
 
   const aragonid = await ens.owner(namehash('aragonid.eth'))
@@ -99,10 +99,10 @@ module.exports = async (
     log('Creating APM package with owner', owner)
     const apmAddr = await artifacts.require('PublicResolver').at(await ens.resolver(namehash('aragonpm.eth'))).addr(namehash('aragonpm.eth'))
     const apm = artifacts.require('APMRegistry').at(apmAddr)
-    //log('APM', apmAddr);
+    log('APM', apmAddr);
 
     if (await ens.owner(appIds[0]) == '0x0000000000000000000000000000000000000000') {
-      //log('Deploying apps in local network')
+      log('Deploying apps in local network')
       await newRepo(apm, 'voting', owner, 'Voting')
       await newRepo(apm, 'finance', owner, 'Finance')
       await newRepo(apm, 'token-manager', owner, 'TokenManager')
@@ -110,7 +110,7 @@ module.exports = async (
     }
 
     if (await ens.owner(namehash(kitEnsName)) == '0x0000000000000000000000000000000000000000') {
-      //log(`creating APM package for ${kitName} at ${kit.address}`)
+      log(`creating APM package for ${kitName} at ${kit.address}`)
       await apm.newRepoWithVersion(kitName, owner, [1, 0, 0], kit.address, 'ipfs:')
     } else {
       // TODO: update APM Repo?
@@ -134,7 +134,7 @@ module.exports = async (
   const arappFile = JSON.stringify(arappObj, null, 2)
   // could also use https://github.com/yeoman/stringify-object if you wanted single quotes
   fs.writeFileSync(kitArappPath, arappFile)
-  //log(`Kit addresses saved to ${arappFileName}`)
+  log(`Kit addresses saved to ${arappFileName}`)
 
   if (typeof truffleExecCallback === 'function') {
     // Called directly via `truffle exec`
