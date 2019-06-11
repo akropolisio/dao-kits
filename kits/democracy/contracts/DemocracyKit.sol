@@ -67,7 +67,7 @@ contract DemocracyKit is BetaKitBase {
         Kernel dao;
         ACL acl;
         Voting voting;
-        (dao, acl, , , , voting) = createDAO(
+        (dao, acl, , , , , voting) = createDAO(
             aragonId,
             token,
             holders,
