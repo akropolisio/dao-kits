@@ -64,8 +64,8 @@ contract BetaKitBase is KitBase, IsContract {
             Finance finance,
             TokenManager tokenManager,
             Vault vault,
-            Voting voting,
-            Agent agent
+            Agent agent,
+            Voting voting
         )
     {
         require(holders.length == stakes.length);
@@ -111,7 +111,7 @@ contract BetaKitBase is KitBase, IsContract {
         emit InstalledApp(tokenManager, appIds[uint8(Apps.TokenManager)]);
 
         //agent app
-        agent = Agent(
+        Agent agent = Agent(
             dao.newAppInstance(
                 appIds[uint8(Apps.Agent)],
                 latestVersionAppBase(appIds[uint8(Apps.Agent)])
@@ -122,6 +122,7 @@ contract BetaKitBase is KitBase, IsContract {
 
         // Required for initializing the Token Manager
         token.changeController(tokenManager);
+
 
         // permissions
         acl.createPermission(ANY_ENTITY, voting, voting.CREATE_VOTES_ROLE(), voting);
@@ -138,6 +139,8 @@ contract BetaKitBase is KitBase, IsContract {
         vault.initialize();
         finance.initialize(vault, 30 days);
         tokenManager.initialize(token, _maxTokens > 1, _maxTokens);
+
+        agent.initialize();
 
         // Set up the token stakes
         acl.createPermission(this, tokenManager, tokenManager.MINT_ROLE(), this);
@@ -158,7 +161,7 @@ contract BetaKitBase is KitBase, IsContract {
         registerAragonID(aragonId, dao);
         emit DeployInstance(aragonId, dao, token);
 
-        return (dao, acl, finance, tokenManager, vault, voting, agent);
+        return (dao, acl, finance, tokenManager, vault, agent, voting);
     }
 
     function cacheToken(MiniMeToken token, address owner) internal {
