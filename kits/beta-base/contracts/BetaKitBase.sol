@@ -133,12 +133,12 @@ contract BetaKitBase is KitBase, IsContract {
         acl.createPermission(voting, finance, finance.MANAGE_PAYMENTS_ROLE(), voting);
         acl.createPermission(voting, tokenManager, tokenManager.ASSIGN_ROLE(), voting);
         acl.createPermission(voting, tokenManager, tokenManager.REVOKE_VESTINGS_ROLE(), voting);
-    
+        acl.createPermission(voting, agent, agent.EXECUTE_ROLE(), voting);
+
         // App inits
         vault.initialize();
         finance.initialize(vault, 30 days);
         tokenManager.initialize(token, _maxTokens > 1, _maxTokens);
-
         agent.initialize();
 
         // Set up the token stakes
@@ -152,7 +152,7 @@ contract BetaKitBase is KitBase, IsContract {
         EVMScriptRegistry reg = EVMScriptRegistry(acl.getEVMScriptRegistry());
         acl.createPermission(voting, reg, reg.REGISTRY_ADD_EXECUTOR_ROLE(), voting);
         acl.createPermission(voting, reg, reg.REGISTRY_MANAGER_ROLE(), voting);
-        acl.createPermission(voting, agent, agent.EXECUTE_ROLE(), voting);
+        
 
         // clean-up
         cleanupPermission(acl, voting, dao, dao.APP_MANAGER_ROLE());
