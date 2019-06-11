@@ -21,7 +21,7 @@ import "@aragon/kits-base/contracts/KitBase.sol";
 contract BetaKitBase is KitBase, IsContract {
     MiniMeTokenFactory public minimeFac;
     IFIFSResolvingRegistrar public aragonID;
-    bytes32[4] public appIds;
+    bytes32[5] public appIds;
 
     mapping (address => address) tokenCache;
 
