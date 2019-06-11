@@ -11,6 +11,7 @@ import "@aragon/apps-voting/contracts/Voting.sol";
 import "@aragon/apps-vault/contracts/Vault.sol";
 import "@aragon/apps-token-manager/contracts/TokenManager.sol";
 import "@aragon/apps-finance/contracts/Finance.sol";
+import "@aragon/apps-agent/contracts/Agent.sol";
 
 import "@aragon/os/contracts/common/IsContract.sol";
 
@@ -27,10 +28,10 @@ contract BetaKitBase is KitBase, IsContract {
     address public constant ANY_ENTITY = address(-1);
 
     // ensure alphabetic order
-    enum Apps { Finance, TokenManager, Vault, Voting }
+    enum Apps { Finance, TokenManager, Vault, Voting, Agent }
 
     event DeployToken(address token, address indexed cacheOwner);
-    event DeployInstance(address dao, address indexed token);
+    event DeployInstance(string aragonId, address dao, address indexed token);
 
     constructor(
         DAOFactory _fac,
@@ -54,7 +55,7 @@ contract BetaKitBase is KitBase, IsContract {
         MiniMeToken token,
         address[] holders,
         uint256[] stakes,
-        uint256 _maxTokens
+        uint256 _maxTokens 
     )
         internal
         returns (
@@ -63,7 +64,8 @@ contract BetaKitBase is KitBase, IsContract {
             Finance finance,
             TokenManager tokenManager,
             Vault vault,
-            Voting voting
+            Voting voting,
+            Agent agent
         )
     {
         require(holders.length == stakes.length);
@@ -108,6 +110,16 @@ contract BetaKitBase is KitBase, IsContract {
         );
         emit InstalledApp(tokenManager, appIds[uint8(Apps.TokenManager)]);
 
+        //agent app
+        agent = Agent(
+            dao.newAppInstance(
+                appIds[uint8(Apps.Agent)],
+                latestVersionAppBase(appIds[uint8(Apps.Agent)])
+            )
+        );
+
+        emit InstalledApp(agent, appIds[uint8(Apps.Agent)]);
+
         // Required for initializing the Token Manager
         token.changeController(tokenManager);
 
@@ -120,6 +132,8 @@ contract BetaKitBase is KitBase, IsContract {
         acl.createPermission(voting, finance, finance.MANAGE_PAYMENTS_ROLE(), voting);
         acl.createPermission(voting, tokenManager, tokenManager.ASSIGN_ROLE(), voting);
         acl.createPermission(voting, tokenManager, tokenManager.REVOKE_VESTINGS_ROLE(), voting);
+        // permissions
+        acl.createPermission(voting, protocolAgent, agent.EXECUTE_ROLE(), voting);
 
         // App inits
         vault.initialize();
@@ -143,9 +157,9 @@ contract BetaKitBase is KitBase, IsContract {
         cleanupPermission(acl, voting, tokenManager, tokenManager.MINT_ROLE());
 
         registerAragonID(aragonId, dao);
-        emit DeployInstance(dao, token);
+        emit DeployInstance(aragonId, dao, token);
 
-        return (dao, acl, finance, tokenManager, vault, voting);
+        return (dao, acl, finance, tokenManager, vault, voting, agent);
     }
 
     function cacheToken(MiniMeToken token, address owner) internal {
