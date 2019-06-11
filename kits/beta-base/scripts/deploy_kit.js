@@ -107,6 +107,7 @@ module.exports = async (
       await newRepo(apm, 'finance', owner, 'Finance')
       await newRepo(apm, 'token-manager', owner, 'TokenManager')
       await newRepo(apm, 'vault', owner, 'Vault')
+      await newRepo(apm, 'agent', owner, 'Agent')
     }
 
     if (await ens.owner(namehash(kitEnsName)) == '0x0000000000000000000000000000000000000000') {

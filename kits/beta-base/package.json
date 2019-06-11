@@ -36,6 +36,7 @@
     "@aragon/apps-voting": "^2.1.0",
     "@aragon/apps-vault": "^4.1.0",
     "@aragon/apps-finance": "^3.0.0",
+    "@aragon/apps-agent": "1.1.1",
     "@aragon/apps-token-manager": "^2.1.0",
     "@aragon/kits-base": "^1.0.0"
   }

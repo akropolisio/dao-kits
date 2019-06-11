@@ -8,7 +8,7 @@ const deploy_apm = require('@aragon/os/scripts/deploy-apm.js')
 const deploy_id = require('@aragon/id/scripts/deploy-beta-aragonid.js')
 
 // ensure alphabetic order
-const apps = ['finance', 'token-manager', 'vault', 'voting']
+const apps = ['finance', 'token-manager', 'vault', 'voting', 'agent']
 const appIds = apps.map(app => namehash(require(`@aragon/apps-${app}/arapp`).environments.default.appName))
 
 const newRepo = async (apm, name, acc, contract) => {
@@ -48,6 +48,7 @@ module.exports = async (callback) => {
       await newRepo(apm, 'finance', owner, 'Finance')
       await newRepo(apm, 'token-manager', owner, 'TokenManager')
       await newRepo(apm, 'vault', owner, 'Vault')
+      await newRepo(apm, 'agent', owner, 'Agent')
     }
   }
 
