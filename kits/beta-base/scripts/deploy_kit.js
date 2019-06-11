@@ -8,7 +8,7 @@ const deployDAOFactory = require('@aragon/os/scripts/deploy-daofactory.js')
 const logDeploy = require('@aragon/os/scripts/helpers/deploy-logger')
 
 // ensure alphabetic order
-const apps = ['finance', 'token-manager', 'vault', 'voting', 'agent']
+const apps = ['agent', 'finance', 'token-manager', 'vault', 'voting']
 const appIds = apps.map(app => namehash(`${app}.aragonpm.eth`))
 
 const globalArtifacts = this.artifacts // Not injected unless called directly via truffle

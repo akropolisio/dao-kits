@@ -28,7 +28,7 @@ contract BetaKitBase is KitBase, IsContract {
     address public constant ANY_ENTITY = address(-1);
 
     // ensure alphabetic order
-    enum Apps { Finance, TokenManager, Vault, Voting, Agent }
+    enum Apps {  Agent, Finance, TokenManager, Vault, Voting}
 
     event DeployToken(address token, address indexed cacheOwner);
     event DeployInstance(string aragonId, address dao, address indexed token);
@@ -61,10 +61,10 @@ contract BetaKitBase is KitBase, IsContract {
         returns (
             Kernel dao,
             ACL acl,
+            Agent agent,
             Finance finance,
             TokenManager tokenManager,
             Vault vault,
-            Agent agent,
             Voting voting
         )
     {
@@ -138,6 +138,7 @@ contract BetaKitBase is KitBase, IsContract {
         vault.initialize();
         finance.initialize(vault, 30 days);
         tokenManager.initialize(token, _maxTokens > 1, _maxTokens);
+
         agent.initialize();
 
         // Set up the token stakes
@@ -160,7 +161,7 @@ contract BetaKitBase is KitBase, IsContract {
         registerAragonID(aragonId, dao);
         emit DeployInstance(aragonId, dao, token);
 
-        return (dao, acl, finance, tokenManager, vault, agent, voting);
+        return (dao, acl, agent, finance, tokenManager, vault, voting);
     }
 
     function cacheToken(MiniMeToken token, address owner) internal {
